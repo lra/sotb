@@ -1,0 +1,7 @@
+[package]
+name = "sotb"
+version = "0.3.0"
+edition = "2024"
+
+[dependencies]
+sdl3 = "0.18"

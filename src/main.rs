@@ -1,7 +1,7 @@
-use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
 use sdl3::event::Event;
+use sdl3::iostream::IOStream;
 use sdl3::keyboard::Keycode;
 use sdl3::pixels::Color;
 use sdl3::rect::Rect;
@@ -9,22 +9,34 @@ use sdl3::render::{Texture, TextureCreator, WindowCanvas};
 use sdl3::surface::Surface;
 use sdl3::video::WindowContext;
 
-const VERSION: &str = "0.3.0";
+const VERSION: &str = env!("CARGO_PKG_VERSION");
 const WIDTH: u32 = 320;
 const HEIGHT: u32 = 240;
 const TICK_INTERVAL: Duration = Duration::from_millis(20);
 const SPEED_FACTOR: f32 = 0.5;
 
-fn data_path(file: &str) -> PathBuf {
-    Path::new(env!("CARGO_MANIFEST_DIR")).join("data").join(file)
-}
+// Assets are compiled into the binary so releases are a single file.
+const HERBE0: &[u8] = include_bytes!("../data/herbe0.bmp");
+const HERBE1: &[u8] = include_bytes!("../data/herbe1.bmp");
+const HERBE2: &[u8] = include_bytes!("../data/herbe2.bmp");
+const HERBE3: &[u8] = include_bytes!("../data/herbe3.bmp");
+const HERBE4: &[u8] = include_bytes!("../data/herbe4.bmp");
+const NUAGES0: &[u8] = include_bytes!("../data/nuages0.bmp");
+const NUAGES1: &[u8] = include_bytes!("../data/nuages1.bmp");
+const NUAGES2: &[u8] = include_bytes!("../data/nuages2.bmp");
+const NUAGES3: &[u8] = include_bytes!("../data/nuages3.bmp");
+const NUAGES4: &[u8] = include_bytes!("../data/nuages4.bmp");
+const BARRIERE: &[u8] = include_bytes!("../data/barriere.bmp");
+const MONTAGNES: &[u8] = include_bytes!("../data/montagnes.bmp");
+const LUNE: &[u8] = include_bytes!("../data/lune.bmp");
 
 fn load_texture<'a>(
     creator: &'a TextureCreator<WindowContext>,
-    path: impl AsRef<Path>,
+    bytes: &[u8],
     color_key: bool,
 ) -> Result<Texture<'a>, String> {
-    let surface = Surface::load_bmp(path.as_ref()).map_err(|e| e.to_string())?;
+    let mut io = IOStream::from_bytes(bytes).map_err(|e| e.to_string())?;
+    let surface = Surface::load_bmp_rw(&mut io).map_err(|e| e.to_string())?;
     // ponytail: the BMPs are 4-bit palettized and the crate maps color keys with a null
     // palette, which silently picks the wrong index — convert to direct color first
     let mut surface = surface
@@ -99,19 +111,19 @@ fn main() -> Result<(), String> {
 
     let creator = canvas.texture_creator();
 
-    let herbe0 = load_texture(&creator, data_path("herbe0.bmp"), false)?;
-    let herbe1 = load_texture(&creator, data_path("herbe1.bmp"), false)?;
-    let herbe2 = load_texture(&creator, data_path("herbe2.bmp"), false)?;
-    let herbe3 = load_texture(&creator, data_path("herbe3.bmp"), false)?;
-    let herbe4 = load_texture(&creator, data_path("herbe4.bmp"), false)?;
-    let nuages0 = load_texture(&creator, data_path("nuages0.bmp"), true)?;
-    let nuages1 = load_texture(&creator, data_path("nuages1.bmp"), true)?;
-    let nuages2 = load_texture(&creator, data_path("nuages2.bmp"), true)?;
-    let nuages3 = load_texture(&creator, data_path("nuages3.bmp"), true)?;
-    let nuages4 = load_texture(&creator, data_path("nuages4.bmp"), true)?;
-    let barriere = load_texture(&creator, data_path("barriere.bmp"), true)?;
-    let montagnes = load_texture(&creator, data_path("montagnes.bmp"), true)?;
-    let lune = load_texture(&creator, data_path("lune.bmp"), true)?;
+    let herbe0 = load_texture(&creator, HERBE0, false)?;
+    let herbe1 = load_texture(&creator, HERBE1, false)?;
+    let herbe2 = load_texture(&creator, HERBE2, false)?;
+    let herbe3 = load_texture(&creator, HERBE3, false)?;
+    let herbe4 = load_texture(&creator, HERBE4, false)?;
+    let nuages0 = load_texture(&creator, NUAGES0, true)?;
+    let nuages1 = load_texture(&creator, NUAGES1, true)?;
+    let nuages2 = load_texture(&creator, NUAGES2, true)?;
+    let nuages3 = load_texture(&creator, NUAGES3, true)?;
+    let nuages4 = load_texture(&creator, NUAGES4, true)?;
+    let barriere = load_texture(&creator, BARRIERE, true)?;
+    let montagnes = load_texture(&creator, MONTAGNES, true)?;
+    let lune = load_texture(&creator, LUNE, true)?;
 
     let mut events = sdl.event_pump().map_err(|e| e.to_string())?;
     let mut scroll: i32 = 0;

@@ -5,9 +5,35 @@ It's as simple as it was, and I've only done it to see how SDL handle some paral
 
 ![Shadow of the Blitz parallax scroll](demo.gif)
 
+## Requirements
+
+- **Rust** with the 2024 edition (rustc 1.85+; `rustc --version` if unsure)
+- **SDL3** system library (the crate links against it via pkg-config)
+
+### Install SDL3
+
+**macOS** (Homebrew):
+
+```
+brew install sdl3
+```
+
+**Linux** (package names vary by distro):
+
+```
+# Debian / Ubuntu
+sudo apt install libsdl3-dev pkg-config
+
+# Fedora
+sudo dnf install SDL3-devel pkgconf-pkg-config
+
+# Arch
+sudo pacman -S sdl3 pkgconf
+```
+
 ## Building
 
-Requires the SDL3 library (`brew install sdl3` on macOS), then:
+From the repository root:
 
 ```
 cargo run

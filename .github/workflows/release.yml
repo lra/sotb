@@ -57,9 +57,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          # Ubuntu 24.04 has no libsdl3-dev; SDL3 packages ship from 25.04+.
+          - os: ubuntu-26.04
             target: x86_64-unknown-linux-gnu
-          - os: ubuntu-24.04-arm
+          - os: ubuntu-26.04-arm
             target: aarch64-unknown-linux-gnu
           - os: macos-latest
             target: aarch64-apple-darwin
@@ -72,6 +73,10 @@ jobs:
       - name: Install SDL3 (Linux)
         if: runner.os == 'Linux'
         run: |
+          sudo apt-get update
+          # universe is required for libsdl3-dev on Ubuntu
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository -y universe
           sudo apt-get update
           sudo apt-get install -y libsdl3-dev pkg-config
 

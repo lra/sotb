@@ -21,7 +21,7 @@ brew install sdl3
 **Linux** (package names vary by distro):
 
 ```
-# Debian / Ubuntu
+# Debian / Ubuntu (libsdl3-dev needs Ubuntu 25.04+ / Debian 13+; universe on Ubuntu)
 sudo apt install libsdl3-dev pkg-config
 
 # Fedora

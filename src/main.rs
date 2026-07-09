@@ -114,7 +114,7 @@ fn main() -> Result<(), String> {
 
     let mut events = sdl.event_pump().map_err(|e| e.to_string())?;
     let mut scroll: i32 = 0;
-    let mut next_tick = Instant::now();
+    let mut next_tick = Instant::now() + TICK_INTERVAL;
 
     'running: loop {
         draw_sky(&mut canvas);
@@ -137,12 +137,17 @@ fn main() -> Result<(), String> {
 
         canvas.present();
 
-        // port of TimeLeft(): pace the scroll at one tick per 20 ms
+        // Pace at one tick per 20 ms including draw/present (fixed cadence from
+        // the previous deadline, not Instant::now after sleep).
         let now = Instant::now();
         if next_tick > now {
             std::thread::sleep(next_tick - now);
         }
-        next_tick = Instant::now() + TICK_INTERVAL;
+        next_tick += TICK_INTERVAL;
+        if next_tick < Instant::now() {
+            // Fell behind (e.g. window drag) — resync so we don't busy-loop catch-up.
+            next_tick = Instant::now() + TICK_INTERVAL;
+        }
 
         scroll += 1;
 

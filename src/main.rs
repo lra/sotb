@@ -1,3 +1,4 @@
+use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
 use sdl3::event::Event;
@@ -14,12 +15,16 @@ const HEIGHT: u32 = 240;
 const TICK_INTERVAL: Duration = Duration::from_millis(20);
 const SPEED_FACTOR: f32 = 0.5;
 
+fn data_path(file: &str) -> PathBuf {
+    Path::new(env!("CARGO_MANIFEST_DIR")).join("data").join(file)
+}
+
 fn load_texture<'a>(
     creator: &'a TextureCreator<WindowContext>,
-    path: &str,
+    path: impl AsRef<Path>,
     color_key: bool,
 ) -> Result<Texture<'a>, String> {
-    let surface = Surface::load_bmp(path).map_err(|e| e.to_string())?;
+    let surface = Surface::load_bmp(path.as_ref()).map_err(|e| e.to_string())?;
     // ponytail: the BMPs are 4-bit palettized and the crate maps color keys with a null
     // palette, which silently picks the wrong index — convert to direct color first
     let mut surface = surface
@@ -93,19 +98,19 @@ fn main() -> Result<(), String> {
 
     let creator = canvas.texture_creator();
 
-    let herbe0 = load_texture(&creator, "data/herbe0.bmp", false)?;
-    let herbe1 = load_texture(&creator, "data/herbe1.bmp", false)?;
-    let herbe2 = load_texture(&creator, "data/herbe2.bmp", false)?;
-    let herbe3 = load_texture(&creator, "data/herbe3.bmp", false)?;
-    let herbe4 = load_texture(&creator, "data/herbe4.bmp", false)?;
-    let nuages0 = load_texture(&creator, "data/nuages0.bmp", true)?;
-    let nuages1 = load_texture(&creator, "data/nuages1.bmp", true)?;
-    let nuages2 = load_texture(&creator, "data/nuages2.bmp", true)?;
-    let nuages3 = load_texture(&creator, "data/nuages3.bmp", true)?;
-    let nuages4 = load_texture(&creator, "data/nuages4.bmp", true)?;
-    let barriere = load_texture(&creator, "data/barriere.bmp", true)?;
-    let montagnes = load_texture(&creator, "data/montagnes.bmp", true)?;
-    let lune = load_texture(&creator, "data/lune.bmp", true)?;
+    let herbe0 = load_texture(&creator, data_path("herbe0.bmp"), false)?;
+    let herbe1 = load_texture(&creator, data_path("herbe1.bmp"), false)?;
+    let herbe2 = load_texture(&creator, data_path("herbe2.bmp"), false)?;
+    let herbe3 = load_texture(&creator, data_path("herbe3.bmp"), false)?;
+    let herbe4 = load_texture(&creator, data_path("herbe4.bmp"), false)?;
+    let nuages0 = load_texture(&creator, data_path("nuages0.bmp"), true)?;
+    let nuages1 = load_texture(&creator, data_path("nuages1.bmp"), true)?;
+    let nuages2 = load_texture(&creator, data_path("nuages2.bmp"), true)?;
+    let nuages3 = load_texture(&creator, data_path("nuages3.bmp"), true)?;
+    let nuages4 = load_texture(&creator, data_path("nuages4.bmp"), true)?;
+    let barriere = load_texture(&creator, data_path("barriere.bmp"), true)?;
+    let montagnes = load_texture(&creator, data_path("montagnes.bmp"), true)?;
+    let lune = load_texture(&creator, data_path("lune.bmp"), true)?;
 
     let mut events = sdl.event_pump().map_err(|e| e.to_string())?;
     let mut scroll: i32 = 0;

@@ -41,9 +41,10 @@ fn load_texture<'a>(
 }
 
 fn draw_plane(canvas: &mut WindowCanvas, texture: &Texture, time: i32, scale: f32, y: i32) {
-    let offset = (time as f32 * scale * SPEED_FACTOR) as i32 % WIDTH as i32;
+    let w = texture.width() as i32;
+    let offset = ((time as f32 * scale * SPEED_FACTOR) as i32).rem_euclid(w);
 
-    for x in [offset - WIDTH as i32, offset] {
+    for x in [offset - w, offset] {
         let _ = canvas.copy(
             texture,
             None,

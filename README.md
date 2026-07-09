@@ -39,6 +39,17 @@ From the repository root:
 cargo run
 ```
 
+## Prebuilt binaries
+
+When the `version` in `Cargo.toml` is bumped on `master`, CI publishes a [GitHub Release](https://github.com/lra/sotb/releases) with archives for:
+
+- Linux x86_64 and ARM64
+- macOS ARM64 and x86_64
+
+Each archive is a single `sotb` binary — BMP assets under `data/` are embedded at compile time. Release binaries are still dynamically linked against system SDL3, so install SDL3 on the machine that runs them (same packages as above; runtime libs are enough if you only run the binary).
+
+Release notes are generated automatically from commits and pull requests since the previous tag.
+
 ## Some useful keys
 
 - F: Toggle Fullscreen

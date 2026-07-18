@@ -1,4 +1,4 @@
-# Shadow of the Blitz v 0.3.0
+# Shadow of the Blitz v 0.4.0
 
 Shadow of the Blitz has been rewritten in Rust, still on SDL (the `sdl3` crate).
 It's as simple as it was, and I've only done it to see how SDL handle some parallax scrolls.
@@ -31,13 +31,45 @@ sudo dnf install SDL3-devel pkgconf-pkg-config
 sudo pacman -S sdl3 pkgconf
 ```
 
-## Building
+## Building (native)
 
 From the repository root:
 
 ```
 cargo run
 ```
+
+## Web / WASM
+
+The same demo builds for the browser via [Emscripten](https://emscripten.org/) (`wasm32-unknown-emscripten`). SDL3 is compiled from source and linked statically; BMP assets stay embedded in the wasm module.
+
+### Prerequisites
+
+- **Rust** with the `wasm32-unknown-emscripten` target (`rustup target add wasm32-unknown-emscripten`)
+- **Emscripten SDK** with `emcc` on your `PATH` (activate with `source ~/emsdk/emsdk_env.sh` after install)
+- **CMake** (used when SDL3 is built from source for the web target)
+
+Install emsdk (once):
+
+```
+git clone https://github.com/emscripten-core/emsdk.git ~/emsdk
+cd ~/emsdk
+./emsdk install latest
+./emsdk activate latest
+source ./emsdk_env.sh   # or emsdk_env.fish
+```
+
+### Build and serve
+
+```
+source ~/emsdk/emsdk_env.sh   # if emcc is not already on PATH
+./scripts/build-web.sh
+python3 -m http.server -d web 8080
+```
+
+Open [http://127.0.0.1:8080/](http://127.0.0.1:8080/). Opening `web/index.html` as a `file://` URL will not work (browsers block WASM that way).
+
+The script copies `sotb.js` and `sotb.wasm` into `web/` next to the checked-in `web/index.html`.
 
 ## Prebuilt binaries
 

@@ -1,0 +1,11 @@
+# Emscripten / WASM browser build (single-threaded, no COOP/COEP).
+[target.wasm32-unknown-emscripten]
+rustflags = [
+    "-C", "link-arg=-sALLOW_MEMORY_GROWTH=1",
+    "-C", "link-arg=-sMAX_WEBGL_VERSION=2",
+    "-C", "link-arg=-sMIN_WEBGL_VERSION=2",
+    "-C", "link-arg=-sFULL_ES3=1",
+    # Default HTML shell is replaced by web/index.html; cargo still emits .js + .wasm.
+    "-C", "link-arg=-sEXPORTED_RUNTIME_METHODS=['callMain','ccall','cwrap']",
+    "-C", "link-arg=-sEXIT_RUNTIME=1",
+]

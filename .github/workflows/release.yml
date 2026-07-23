@@ -106,8 +106,39 @@ jobs:
           path: sotb-${{ needs.prepare.outputs.version }}-${{ matrix.target }}.tar.gz
           if-no-files-found: error
 
+  build-wasm:
+    needs: prepare
+    if: needs.prepare.outputs.should_release == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: mymindstorm/setup-emsdk@v14
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-emscripten
+
+      - name: Build web bundle
+        run: ./scripts/build-web.sh
+
+      - name: Package archive
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          set -euo pipefail
+          ARCHIVE="sotb-${VERSION}-wasm32-unknown-emscripten.tar.gz"
+          tar czf "$ARCHIVE" -C web index.html sotb.js sotb.wasm
+          ls -la "$ARCHIVE"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: sotb-${{ needs.prepare.outputs.version }}-wasm32-unknown-emscripten
+          path: sotb-${{ needs.prepare.outputs.version }}-wasm32-unknown-emscripten.tar.gz
+          if-no-files-found: error
+
   publish:
-    needs: [prepare, build]
+    needs: [prepare, build, build-wasm]
     if: needs.prepare.outputs.should_release == 'true'
     runs-on: ubuntu-latest
     steps:

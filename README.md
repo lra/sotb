@@ -77,8 +77,9 @@ When the `version` in `Cargo.toml` is bumped on `master`, CI publishes a [GitHub
 
 - Linux x86_64 and ARM64
 - macOS ARM64 and x86_64
+- Web (`wasm32-unknown-emscripten`): `index.html`, `sotb.js`, `sotb.wasm` — extract onto any static HTTP host (or embed `sotb.js`/`sotb.wasm` in your own page) and it runs in the browser
 
-Each archive is a single `sotb` binary — BMP assets under `data/` are embedded at compile time. Release binaries are still dynamically linked against system SDL3, so install SDL3 on the machine that runs them (same packages as above; runtime libs are enough if you only run the binary).
+Each native archive is a single `sotb` binary — BMP assets under `data/` are embedded at compile time. Release binaries are still dynamically linked against system SDL3, so install SDL3 on the machine that runs them (same packages as above; runtime libs are enough if you only run the binary).
 
 Release notes are generated automatically from commits and pull requests since the previous tag.
 

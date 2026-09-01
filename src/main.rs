@@ -153,7 +153,7 @@ fn init_app() -> Result<App, String> {
         .map_err(|e| e.to_string())?;
 
     println!("Shadow of the Blitz {VERSION}");
-    println!("http://www.glop.org/software/sotb");
+    println!("https://glop.org/sotb/");
     println!();
     let (w, h) = canvas.output_size().map_err(|e| e.to_string())?;
     println!("Resolution used: {w}x{h}");

@@ -7,7 +7,7 @@ cd "$ROOT"
 
 # Prefer an already-activated emcc; otherwise try a common emsdk install path.
 if ! command -v emcc >/dev/null 2>&1; then
-  for envf in "${EMSDK}/emsdk_env.sh" "$HOME/emsdk/emsdk_env.sh"; do
+  for envf in "${EMSDK:-}/emsdk_env.sh" "$HOME/emsdk/emsdk_env.sh"; do
     if [[ -f "$envf" ]]; then
       # shellcheck disable=SC1090
       source "$envf"

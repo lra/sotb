@@ -7,6 +7,12 @@ It's as simple as it was, and I've only done it to see how SDL handle some paral
 
 See it running in your browser at [https://glop.org/sotb/](https://glop.org/sotb/).
 
+## Install (Homebrew)
+
+```
+brew install lra/tap/sotb
+```
+
 ## Requirements
 
 - **Rust** with the 2024 edition (rustc 1.85+; `rustc --version` if unsure)
